@@ -10,6 +10,7 @@
     function submitted() {
         // Place appropriate submit handling here
         alert("La solicitud ha finalizado.");
+	window.location.reload(true);
     }    
     window.onload = function() {
         document.getElementById("embeddedTask").addEventListener("submit", submitted, false);
