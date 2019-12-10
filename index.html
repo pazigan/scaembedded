@@ -5,8 +5,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- This script loads the Appian Web components; change it to your Appian server's domain -->
-<script src="https://poc-sca-alpha.appiancloud.com/suite/tempo/ui/sail-client/embeddedBootstrap.nocache.js" id="appianEmbedded"></script>
-
+<script src="https://poc-sca-alpha.appiancloud.com/suite/tempo/ui/sail-client/embeddedBootstrap.nocache.js" id="appianEmbedded" data-themeidentifier="spatheme" data-bannerposition="embeddedInterface"></script>
+<script>
+    function submitted() {
+        // Place appropriate submit handling here
+        alert("La solicitud ha finalizado.");
+    }    
+    window.onload = function() {
+        document.getElementById("embeddedTask").addEventListener("submit", submitted, false);
+    }
+  </script>
 <style>
 * {
   box-sizing: border-box;
@@ -155,7 +163,8 @@ body {
     <!--div class="fakeimg" style="height:200px;">Image</div-->
 	<!--appian-task taskId="1611"></appian-task-->
 	<!--appian-report reportUrlStub="Flqsdw"></appian-report-->
-	  <appian-report reportUrlStub="vugKug"></appian-report>
+	  <!--appian-report reportUrlStub="vugKug"></appian-report-->
+	  <appian-action id="embeddedTask" processModelUuid="575b92b4-2238-4e10-8c62-227f92e19924"></appian-action>
     <p>Some text..</p>
     <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
     <br>
