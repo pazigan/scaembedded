@@ -1,30 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- This script loads the Appian Web components; change it to your Appian server's domain -->
-    <script src="https://poc-sca-alpha.appiancloud.com/suite/tempo/ui/sail-client/embeddedBootstrap.nocache.js" id="appianEmbedded" data-themeidentifier="spatheme" data-bannerposition="hidden"></script>
-
-    <script>
-      /* This function dynamically inserts an <appian-task> element into the page with the user-specified taskId */
-      function addTask() {
-        var taskId = document.getElementById('new-task').value;
-        if (taskId) {
-          var newTask = document.createElement('appian-task');
-          newTask.setAttribute("taskId", taskId);
-          newTask.addEventListener("submit", handleSubmit, false);
-          document.body.insertBefore(newTask, document.getElementById('insertPoint'));
-        }
-      }
-
-      /* This function is called by the submit event listener */
-      function handleSubmit() {
-        alert("The task has been submitted!");
-      }
-    </script>
-  </head>
   <body>
-    <input id="new-task" />
-    <button onclick="return addTask();">Embed This Task</button>
-    <div id="insertPoint"></div>
+    <div id="embeddedDiv"></div>
+    <script src="https://poc-sca-alpha.appiancloud.com/suite/tempo/ui/sail-client/embeddedBootstrap.nocache.js" id="appianEmbedded" data-themeidentifier="spatheme" data-bannerposition="hidden"></script>
+    <script>
+      var embeddedTaskId = 'embeddedTask';
+      var embeddedTaskReportId = 'embeddedTaskReport';
+      var container = document.getElementById('embeddedDiv');
+
+      function taskSubmitted() {
+        console.log("An Appian task was submitted!");
+
+        // Remove the appian-task tag
+        var taskTag = document.getElementById(embeddedTaskId);
+        if (taskTag) {
+          taskTag.destroy();
+          container.removeChild(taskTag);
+        }
+
+        // Re-add the appian-report tag
+        addTaskReport();
+      }
+
+      function taskLinkOpened(event) {
+        // Prevent the Appian default behavior of opening a new tab
+        event.preventDefault();
+
+        // Pull off taskId attribute from the event
+        var {taskId} = event.detail;
+        console.log('An Appian task link was clicked [taskId= ' + taskId + '].');
+
+        // Create the appian-task embedded tag
+        var taskTag = document.createElement('appian-task');
+        taskTag.setAttribute('id', embeddedTaskId);
+        taskTag.setAttribute('taskId', taskId);
+
+        // Listen for submission events
+        taskTag.addEventListener('submit', taskSubmitted, false);
+
+        // Remove the appian-report tag and add the task tag in its place
+        var reportTag = document.getElementById(embeddedTaskReportId);
+        if (reportTag) {
+          reportTag.destroy();
+          container.removeChild(reportTag);
+        }
+        container.appendChild(taskTag);
+      }
+
+      function addTaskReport() {
+        // Build the appian-report tag for the task report
+        var taskReportTag = document.createElement('appian-report');
+        taskReportTag.setAttribute('id', embeddedTaskReportId);
+
+        // Replace this URL stub with your report's URL Stub
+        taskReportTag.setAttribute('reportUrlStub', 'ChangeToYourValidReportUrlStub');
+
+        // Listen for clicks on task links
+        taskReportTag.addEventListener("open-task-link", taskLinkOpened, false);
+
+        // Add the tag to the dom for display
+        container.appendChild(taskReportTag);
+      }
+
+      addTaskReport();
+    </script>
   </body>
 </html>
+  
